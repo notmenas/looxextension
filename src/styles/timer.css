@@ -1,0 +1,104 @@
+.site-timer {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 99999;
+    background: #1e1e2e;
+    border: 1px solid #2d2d3f70;
+    border-radius: 8px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    transition: all 0.2s ease;
+    color: #e3e3e3;
+  }
+  
+  .site-timer:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  }
+  
+  .timer-content {
+    min-width: 180px;
+  }
+  
+  .timer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 8px;
+    background: #6366f1;
+    color: white;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    user-select: none;
+    font-size: 12px;
+  }
+  
+  .timer-controls {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+  }
+  
+  .timer-controls button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    width: 20px;
+    height: 20px;
+  }
+  
+  .minimize-btn {
+    font-size: 16px;
+    line-height: 1;
+  }
+  
+  .timer-controls button:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  .timer-controls button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .timer-body {
+    padding: 5px;
+    background: transparent;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+  
+  .timer-row {
+    display: flex;
+    justify-content: center;
+    font-size: 11px;
+    padding: 3px 5px;
+    background-color: #252535;
+    border-radius: 3px;
+  }
+  
+  .timer-row:last-child {
+    margin-bottom: 0;
+  }
+  
+  .timer-row span:last-child {
+    font-weight: 500;
+  }
+  
+  .site-timer.minimized .timer-body {
+    display: none;
+  }
+  
+  .site-timer.minimized .timer-header {
+    border-radius: 7px;
+  }
+  
+  .site-timer.minimized .minimize-btn {
+    transform: rotate(180deg);
+  }

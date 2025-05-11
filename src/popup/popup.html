@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BB Code Tools</title>
+    <style>
+        :root {
+            --bg-color: #121218;
+            --card-bg: #1e1e2e;
+            --text-color: #e3e3e3;
+            --accent-color: #6366f1;
+            --accent-hover: #4f46e5;
+            --border-color: #2d2d3f;
+            --input-bg: #252535;
+            --tab-inactive: #2a2a3a;
+            --success-color: #10b981;
+            --success-hover: #059669;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --secondary-text: #a0a0b0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+            min-width: 800px;
+            min-height: 600px;
+            line-height: 1.5;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-placeholder {
+            width: 40px;
+            height: 40px;
+            background-image: url("logo.png");
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .app-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            color: white;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 20px;
+            background-color: var(--card-bg);
+            padding: 8px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-tab {
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            background: var(--tab-inactive);
+            color: var(--text-color);
+            border: none;
+            transition: all 0.2s;
+            font-weight: 500;
+            flex: 1;
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .nav-tab:hover {
+            background-color: rgba(99, 102, 241, 0.1);
+        }
+
+        .nav-tab.active {
+            background-color: var(--accent-color);
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .controls-container {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 16px;
+        }
+
+        .controls-container h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            resize: vertical;
+            font-size: 14px;
+            transition: all 0.2s;
+            margin-bottom: 16px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        textarea::placeholder {
+            color: var(--secondary-text);
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+            background-color: var(--input-bg);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .options label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            user-select: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+
+        .options label:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        input[type="checkbox"] {
+            accent-color: var(--accent-color);
+            width: 16px;
+            height: 16px;
+        }
+
+        .style-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 16px;
+            background-color: var(--input-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .color-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 120px;
+        }
+
+        #colorPicker {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            background-color: transparent;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .size-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-grow: 1;
+        }
+
+        input[type="range"] {
+            flex-grow: 1;
+            max-width: 200px;
+            accent-color: var(--accent-color);
+            height: 6px;
+        }
+
+        #sizeValue {
+            min-width: 40px;
+            text-align: center;
+            background-color: var(--card-bg);
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-weight: 500;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #convert {
+            background-color: var(--success-color);
+        }
+
+        #convert:hover {
+            background-color: var(--success-hover);
+        }
+
+        #copyButton {
+            background-color: var(--accent-color);
+        }
+
+        #saveSettings, #applyCss, #saveCss {
+            background-color: var(--success-color);
+        }
+
+        #saveSettings:hover, #applyCss:hover, #saveCss:hover {
+            background-color: var(--success-hover);
+        }
+
+        .settings-options {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background-color: var(--input-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        select {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        #login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        #login-form input {
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--input-bg);
+            color: var(--text-color);
+        }
+
+        .account-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+        }
+
+        .account-links a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .account-links a:hover {
+            text-decoration: underline;
+        }
+
+        #loginBtn {
+            background-color: var(--accent-color);
+            margin-top: 8px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .section-title {
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            .options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .style-controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .size-control {
+                width: 100%;
+            }
+            
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .nav-tab {
+                min-width: calc(50% - 4px);
+                flex: 0 0 auto;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .controls-container {
+                padding: 16px;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        .css-switch-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background-color: var(--input-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .switch-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--tab-inactive);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .switch-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .switch-slider {
+            background-color: var(--success-color);
+        }
+
+        input:checked + .switch-slider:before {
+            transform: translateX(26px);
+        }
+
+        .css-subtabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 16px;
+            background-color: var(--input-bg);
+            padding: 4px;
+            border-radius: 6px;
+        }
+
+        .css-subtab {
+            padding: 8px 16px;
+            border-radius: 4px;
+            background: var(--tab-inactive);
+            color: var(--text-color);
+            border: none;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .css-subtab.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .css-subtab-content {
+            display: none;
+        }
+
+        .css-subtab-content.active {
+            display: block;
+        }
+
+        .preset-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .preset-item {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preset-info {
+            flex: 1;
+        }
+
+        .preset-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .preset-date {
+            font-size: 0.8rem;
+            color: var(--secondary-text);
+        }
+
+        .preset-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .preset-actions button {
+            padding: 6px 12px;
+            font-size: 0.9rem;
+        }
+
+        .time-popup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            width: 300px;
+            display: none;
+        }
+
+        .time-popup-content {
+            padding: 16px;
+        }
+
+        .time-popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .time-popup-header span {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .minimize-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .time-popup-body {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .time-entry {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-color);
+        }
+
+        .analytics-content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 16px;
+        }
+
+        .stat-card {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .stat-label {
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            font-family: monospace;
+        }
+
+        .danger-btn {
+            background: var(--danger-color, #dc2626);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .danger-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-wrapper">
+                <div class="logo-placeholder">BB</div>
+                <h1 class="app-title">BB Code Tools</h1>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="bbcode">BB Code</button>
+            <button class="nav-tab" data-tab="css">Custom CSS</button>
+            <button class="nav-tab" data-tab="settings">Settings</button>
+            <button class="nav-tab" data-tab="account">Account</button>
+            <button class="nav-tab" data-tab="analytics">Analytics</button>
+            <button class="nav-tab" data-tab="customizer">Customizer</button>
+        </div>
+
+        <!-- BB Code Tab -->
+        <div class="tab-content active" id="bbcode">
+            <div class="controls-container">
+                <h2>Text Formatter</h2>
+                <p class="section-title">Input Text</p>
+                <textarea id="inputText" placeholder="Enter your text here..."></textarea>
+                
+                <p class="section-title">Formatting Options</p>
+                <div class="options">
+                    <label><input type="checkbox" name="bbStyle" value="b"> Bold</label>
+                    <label><input type="checkbox" name="bbStyle" value="i"> Italic</label>
+                    <label><input type="checkbox" name="bbStyle" value="u"> Underline</label>
+                    <label><input type="checkbox" name="bbStyle" value="s"> Strike</label>
+                    <label><input type="checkbox" name="bbStyle" value="color"> Color</label>
+                    <label><input type="checkbox" name="bbStyle" value="size"> Size</label>
+                </div>
+                
+                <p class="section-title">Style Settings</p>
+                <div class="style-controls">
+                    <div class="color-control">
+                        <span>Color:</span>
+                        <input type="color" id="colorPicker" value="#6366f1">
+                    </div>
+                    
+                    <div class="size-control">
+                        <span>Size:</span>
+                        <input type="range" id="sizeSlider" min="8" max="24" value="12">
+                        <span id="sizeValue">12</span>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button id="convert">Convert Text</button>
+                </div>
+                
+                <p class="section-title">Generated BB Code</p>
+                <textarea id="outputText" readonly placeholder="BB code will appear here..."></textarea>
+                
+                <div class="action-buttons">
+                    <button id="copyButton">Copy to Clipboard</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CSS Tab -->
+        <div class="tab-content" id="css">
+            <div class="controls-container">
+                <h2>Custom CSS Editor</h2>
+                <div class="css-subtabs">
+                    <button class="css-subtab active" data-subtab="editor">Editor</button>
+                    <button class="css-subtab" data-subtab="presets">Presets</button>
+                </div>
+
+                <!-- CSS Editor Subtab -->
+                <div class="css-subtab-content active" id="editor">
+                    <p class="section-title">CSS Code</p>
+                    <textarea id="cssInput" placeholder="Enter your custom CSS here..."></textarea>
+                    <div class="style-controls">
+                        <label class="css-switch-container">
+                            <span>Enable Custom CSS</span>
+                            <label class="switch">
+                                <input type="checkbox" id="cssToggle">
+                                <span class="switch-slider"></span>
+                            </label>
+                        </label>
+                    </div>
+                    <div class="action-buttons">
+                        <button id="saveAsPreset">Save as Preset</button>
+                    </div>
+                </div>
+
+                <!-- Presets Subtab -->
+                <div class="css-subtab-content" id="presets">
+                    <p class="section-title">Saved Presets</p>
+                    <div class="preset-list" id="presetList">
+                        <!-- Presets will be added here dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div class="tab-content" id="settings">
+            <div class="controls-container">
+                <h2>Settings</h2>
+                <p class="section-title">Application Preferences</p>
+                <div class="settings-options">
+                    <label class="setting-item">
+                        <span>Dark Mode</span>
+                        <input type="checkbox" name="darkMode" checked>
+                    </label>
+                    <label class="setting-item">
+                        <span>Auto Save</span>
+                        <input type="checkbox" name="autoSave">
+                    </label>
+                    <label class="setting-item">
+                        <span>Default Font Size</span>
+                        <select name="defaultSize">
+                            <option value="12">12px</option>
+                            <option value="14">14px</option>
+                            <option value="16">16px</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="action-buttons">
+                    <button id="saveSettings">Save Settings</button>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>Time Tracking</h3>
+                    <div class="setting-item">
+                        <label class="switch-container">
+                            <span>Enable Time Tracking</span>
+                            <label class="switch">
+                                <input type="checkbox" id="timeTrackingToggle">
+                                <span class="switch-slider"></span>
+                            </label>
+                        </label>
+                    </div>
+                    <div class="time-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Today's Time:</span>
+                            <span id="todayTime" class="stat-value">0h 0m 0s</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Total Time:</span>
+                            <span id="totalTime" class="stat-value">0h 0m 0s</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>General Settings</h3>
+                    <div class="setting-item">
+                        <label class="switch-container">
+                            <span>Auto-apply Last Used CSS</span>
+                            <label class="switch">
+                                <input type="checkbox" id="autoApplyToggle">
+                                <span class="switch-slider"></span>
+                            </label>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label class="switch-container">
+                            <span>Show Timer</span>
+                            <label class="switch">
+                                <input type="checkbox" id="timerToggle">
+                                <span class="switch-slider"></span>
+                            </label>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="analytics-btn-container">
+                    <button id="openAnalytics" class="analytics-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="20" x2="18" y2="10"/>
+                            <line x1="12" y1="20" x2="12" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="14"/>
+                        </svg>
+                        View Analytics
+                    </button>
+                </div>
+
+                <div class="settings-actions">
+                    <button id="resetTimeStats">Reset Time Statistics</button>
+                    <button id="clearAllPresets">Clear All CSS Presets</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Tab -->
+        <div class="tab-content" id="account">
+            <div class="controls-container">
+                <h2>Account</h2>
+                <p class="section-title">Login Information</p>
+                <div id="login-form">
+                    <input type="text" placeholder="Username" id="username">
+                    <input type="password" placeholder="Password" id="password">
+                    <button id="loginBtn">Login</button>
+                    <p class="account-links">
+                        <a href="#">Create Account</a>
+                        <a href="#">Forgot Password?</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div class="tab-content" id="analytics">
+            <div class="controls-container">
+                <h2>Time Analytics</h2>
+                <div class="analytics-content">
+                    <div class="stat-card">
+                        <span class="stat-label">Today's Time</span>
+                        <span id="analyticsToday" class="stat-value">0h 0m 0s</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Total Time</span>
+                        <span id="analyticsTotal" class="stat-value">0h 0m 0s</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Daily Average</span>
+                        <span id="analyticsAverage" class="stat-value">0h 0m 0s</span>
+                    </div>
+                    <button id="resetStats" class="danger-btn">Reset Statistics</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customizer Tab -->
+        <div class="tab-content" id="customizer">
+            <div class="controls-container">
+                <h2>Name Style Customizer</h2>
+                <div class="settings-options">
+                    <label class="setting-item">
+                        <span>Style 1</span>
+                        <input type="text" id="style1Input" placeholder="Enter style 1 (e.g. [b]YourName[/b])">
+                    </label>
+                    <label class="setting-item">
+                        <span>Style 2</span>
+                        <input type="text" id="style2Input" placeholder="Enter style 2 (e.g. [color=red]YourName[/color])">
+                    </label>
+                </div>
+                <div class="action-buttons">
+                    <button id="saveNameStyles">Save Styles</button>
+                </div>
+                <div id="customizerStatus" style="margin-top:10px;color:var(--success-color);display:none;">Saved!</div>
+            </div>
+        </div>
+    </div>
+    <!-- Time Tracking Popup -->
+    <div id="timePopup" class="time-popup">
+        <div class="time-popup-content">
+            <div class="time-popup-header">
+                <span>Time on Site</span>
+                <button id="minimizeTimePopup" class="minimize-btn">_</button>
+            </div>
+            <div class="time-popup-body">
+                <div class="time-entry">
+                    <span>Today:</span>
+                    <span id="popupTodayTime">0h 0m 0s</span>
+                </div>
+                <div class="time-entry">
+                    <span>Total:</span>
+                    <span id="popupTotalTime">0h 0m 0s</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="popup.js"></script>
+    <script>
+        // Tab switching (if not already present)
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById(this.getAttribute('data-tab')).classList.add('active');
+            });
+        });
+
+        // Customizer logic
+        const style1Input = document.getElementById('style1Input');
+        const style2Input = document.getElementById('style2Input');
+        const saveNameStyles = document.getElementById('saveNameStyles');
+        const customizerStatus = document.getElementById('customizerStatus');
+
+        // Load saved styles
+        chrome.storage.local.get(['nameStyles'], (result) => {
+            if (result.nameStyles) {
+                style1Input.value = result.nameStyles.style1 || '';
+                style2Input.value = result.nameStyles.style2 || '';
+            }
+        });
+
+        // Save styles
+        saveNameStyles.addEventListener('click', () => {
+            chrome.storage.local.set({
+                nameStyles: {
+                    style1: style1Input.value,
+                    style2: style2Input.value
+                }
+            }, () => {
+                customizerStatus.style.display = 'block';
+                setTimeout(() => customizerStatus.style.display = 'none', 1200);
+            });
+        });
+    </script>
+</body>
+</html>

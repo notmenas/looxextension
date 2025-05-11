@@ -1,0 +1,54 @@
+{
+    "manifest_version": 3,
+    "name": "DXD Tools - Cornerd Nerd",
+    "version": "1.0",
+    "description": "A useful tool for Looksmax.org",
+    "permissions": [
+        "activeTab",
+        "scripting",
+        "storage",
+        "tabs"
+    ],
+    "host_permissions": [
+        "https://looksmax.org/*"
+    ],
+    "action": {
+        "default_popup": "popup/popup.html"
+    },
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
+    "content_scripts": [
+        {
+            "matches": ["https://looksmax.org/*"],
+            "js": ["content.js", "timer.js", "style-editor.js"],
+            "css": ["styles/timer.css"],
+            "run_at": "document_start"
+        }
+    ],
+    "web_accessible_resources": [{
+        "resources": ["settings.json"],
+        "matches": ["<all_urls>"]
+    },
+    {
+        "resources": ["pages/analytics.html", "pages/analytics.js"],
+        "matches": ["<all_urls>"]
+    },
+    {
+        "resources": [
+            "settings.json",
+            "pages/graph.html",
+            "pages/graph.js"
+        ],
+        "matches": ["<all_urls>"]
+    },
+    {
+        "resources": [
+            "pages/analytics.html",
+            "pages/analytics.js",
+            "styles/analytics.css"
+        ],
+        "matches": ["<all_urls>"]
+    }]
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Usage Graphs</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background: #1a1a2e;
+            color: #e3e3e3;
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .chart-container {
+            background: #1e1e2e;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        h2 {
+            color: #6366f1;
+            margin-top: 0;
+        }
+        canvas {
+            max-height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chart-container">
+        <h2>Weekly Usage</h2>
+        <canvas id="weeklyChart"></canvas>
+    </div>
+    <div class="chart-container">
+        <h2>Daily Distribution</h2>
+        <canvas id="dailyChart"></canvas>
+    </div>
+    <script src="graph.js"></script>
+</body>
+</html>
